@@ -1,14 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import React, { useState } from 'react'
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
 
-function Square({ coord = 1, value, onSquareClick }: { coord: number, value: string, onSquareClick: any }) {
+import './App.css'
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+
+function Square(
+  {
+    coord = 1,
+    value,
+    onSquareClick,
+    disabled=false,
+  }:
+    {
+      coord: number,
+      value: string,
+      onSquareClick: any,
+      disabled: boolean,
+    }
+) {
   return (
-    <button
+    <Button variant="text" sx={{ width: 50, height: 50, border: 'solid', radius: '0px' }}
       onClick={onSquareClick}
+      disabled={disabled}
       className="square" >
       {value}
-    </button>
+    </Button>
   )
 }
 
@@ -60,11 +83,15 @@ function Board() {
   const col = 3
   const [currentPlayer, setNextPlayer] = useState<string>('X')
   const [squares, setSquares] = useState<string[][]>([...Array(row)].map(_ => Array(col).fill("")))
+  const [isGameFinished, setIsGameFinished ] = useState<boolean>(false)
 
   const winner = calculateWinner(squares);
   let status;
   if (winner != "") {
     status = "Winner is " + winner
+    if (!isGameFinished) {
+      setIsGameFinished(true)
+    }
   } else {
     status = "Current Turn: " + currentPlayer
   }
@@ -81,23 +108,25 @@ function Board() {
     setSquares(nextSquares)
   }
   return (
-    <div>
-      <div className='status'>{status}</div>
-      <div className='board-row'>
-        {
-          [...Array(row)].map((_, i) =>
-            // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
-            <div key={"row-" + i} className="board-row">
-              {
-                [...Array(col)].map((_, j) =>
-                  <Square key={"square-" + (row * i + j + 1)} value={squares[i][j]} onSquareClick={() => handleClick(i, j)} coord={row * i + j + 1} />
-                )
-              }
-            </div>
-          )
-        }
-      </div>
-    </div>
+    <Container fixed>
+      <Container>
+        <Grid container rowSpacing={0} columnSpacing={0}>
+          {
+            [...Array(row)].map((_, i) =>
+              // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
+              <Grid item xs={12}>
+                {
+                  [...Array(col)].map((_, j) =>
+                    <Square disabled={isGameFinished} key={"square-" + (row * i + j + 1)} value={squares[i][j]} onSquareClick={() => handleClick(i, j)} coord={row * i + j + 1} />
+                  )
+                }
+              </Grid>
+            )
+          }
+        </Grid>
+        <Typography variant="h5">{status}</Typography>
+      </Container>
+    </Container>
   )
 }
 
@@ -105,29 +134,18 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR haha
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <Board />
-    </div>
+    <React.Fragment>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Typography variant="h5">Simply Tic Tac Toe</Typography>
+        </Toolbar>
+      </AppBar>
+      {/* Refer to https://mui.com/material-ui/react-app-bar/ for Second Toolbar component */}
+      <Toolbar />
+      <Container>
+        <Board />
+      </Container>
+    </React.Fragment>
   )
 }
 
