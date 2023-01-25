@@ -16,19 +16,16 @@ function Square(
     coord = 1,
     value,
     onSquareClick,
-    disabled=false,
   }:
     {
       coord: number,
       value: string,
       onSquareClick: any,
-      disabled: boolean,
     }
 ) {
   return (
     <Button variant="text" sx={{ width: 50, height: 50, border: 'solid', radius: '0px' }}
       onClick={onSquareClick}
-      disabled={disabled}
       className="square" >
       {value}
     </Button>
@@ -100,6 +97,9 @@ function Board() {
     if (squares[i][j] != '') {
       return
     }
+    if (isGameFinished) {
+      return
+    }
     const nextSquares = squares.map(squares => squares.slice())
     console.log("editing row " + i + " col " + j)
     nextSquares[i][j] = currentPlayer
@@ -109,23 +109,29 @@ function Board() {
   }
   return (
     <Container fixed>
-      <Container>
-        <Grid container rowSpacing={0} columnSpacing={0}>
-          {
-            [...Array(row)].map((_, i) =>
-              // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
-              <Grid item xs={12}>
-                {
-                  [...Array(col)].map((_, j) =>
-                    <Square disabled={isGameFinished} key={"square-" + (row * i + j + 1)} value={squares[i][j]} onSquareClick={() => handleClick(i, j)} coord={row * i + j + 1} />
-                  )
-                }
-              </Grid>
-            )
-          }
+      <Grid container spacing={0}>
+        <Grid item xs={12} md={3}>
+          <Grid container rowSpacing={0} columnSpacing={0}>
+            {
+              [...Array(row)].map((_, i) =>
+                // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
+                <Grid item xs={12}>
+                  {
+                    [...Array(col)].map((_, j) =>
+                      <Square key={"square-" + (row * i + j + 1)} value={squares[i][j]} onSquareClick={() => handleClick(i, j)} coord={row * i + j + 1} />
+                    )
+                  }
+                </Grid>
+              )
+            }
+          </Grid>
+          <Typography variant="h5">{status}</Typography>
         </Grid>
-        <Typography variant="h5">{status}</Typography>
-      </Container>
+        <Grid item xs={12} md={9}>
+
+        </Grid>
+      </Grid>
+      
     </Container>
   )
 }
