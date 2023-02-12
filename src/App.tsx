@@ -5,11 +5,13 @@ import Button from '@mui/material/Button';
 import './App.css'
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 
 function Square(
   {
@@ -24,7 +26,7 @@ function Square(
     }
 ) {
   return (
-    <Button variant="text" sx={{ width: 50, height: 50, border: 'solid', radius: '0px' }}
+    <Button variant="text" sx={{ width: 160, height: 160 }}
       onClick={onSquareClick}
       className="square" >
       {value}
@@ -76,8 +78,9 @@ function calculateWinner(board: string[][]): string {
 }
 
 function Board() {
-  const row = 3
-  const col = 3
+  const row = 5
+  const col = 4
+  const boxSizePx = 150
   const [currentPlayer, setNextPlayer] = useState<string>('X')
   const [squares, setSquares] = useState<string[][]>([...Array(row)].map(_ => Array(col).fill("")))
   const [isGameFinished, setIsGameFinished ] = useState<boolean>(false)
@@ -108,31 +111,39 @@ function Board() {
     setSquares(nextSquares)
   }
   return (
-    <Container fixed>
-      <Grid container spacing={0}>
-        <Grid item xs={12} md={3}>
-          <Grid container rowSpacing={0} columnSpacing={0}>
-            {
-              [...Array(row)].map((_, i) =>
-                // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
-                <Grid item xs={12}>
-                  {
-                    [...Array(col)].map((_, j) =>
-                      <Square key={"square-" + (row * i + j + 1)} value={squares[i][j]} onSquareClick={() => handleClick(i, j)} coord={row * i + j + 1} />
-                    )
-                  }
-                </Grid>
-              )
-            }
-          </Grid>
-          <Typography variant="h5">{status}</Typography>
-        </Grid>
-        <Grid item xs={12} md={9}>
-
-        </Grid>
-      </Grid>
+    <Stack spacing={2}>
+      <Grid container sx={{
+          '--Grid-borderWidth': '1px',
+          borderTop: 'var(--Grid-borderWidth) solid',
+          borderLeft: 'var(--Grid-borderWidth) solid',
+          borderColor: 'divider',
+          '& > div': {
+            borderBottom: 'var(--Grid-borderWidth) solid',
+            borderColor: 'divider',
+          },
+          width: boxSizePx*col+2 // Small hack to fix the Grid size XD
+        }}>
+      {squares.map( (lines, indexY)  => (
+        <Grid container spacing={0} sx={{
+          '& > div': {
+            borderRight: 'var(--Grid-borderWidth) solid',
+            borderColor: 'divider',
+          },
+        }}>
+          {
+            lines.map(  (item, indexX) => 
+            // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
+              <Grid xs={4} sx= {{ height: boxSizePx, width: boxSizePx }}>
+              <Square key={"square-"+ (indexY*row+indexX)} value={item} onSquareClick={() => handleClick(indexY, indexX)} coord={indexY*row+indexX} />
+              </Grid>
       
-    </Container>
+           )
+          }
+        </Grid>
+      ) )}
+      </Grid>
+      <Typography variant="h5">{status}</Typography>
+      </Stack>
   )
 }
 
@@ -143,13 +154,15 @@ function App() {
     <React.Fragment>
       <AppBar position="fixed">
         <Toolbar>
-          <Typography variant="h5">Simply Tic Tac Toe</Typography>
+          <Typography variant="h6" sx={{fontWeight: 'medium', textTransform: 'capitalize',  fontFamily: 'Monospace'   }}>Simply Tic Tac Toe</Typography>
         </Toolbar>
       </AppBar>
       {/* Refer to https://mui.com/material-ui/react-app-bar/ for Second Toolbar component */}
       <Toolbar />
       <Container>
+        <Paper variant="outlined" sx={{ textAlign: 'center' , p:2 }}  >
         <Board />
+        </Paper>
       </Container>
     </React.Fragment>
   )
