@@ -13,22 +13,26 @@ import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 
+const boxSizePx = 150
+const row = 3
+const col = 3
+
 function Square(
   {
-    coord = 1,
+    isWinCoord=false,
     value,
     onSquareClick,
   }:
     {
-      coord: number,
+      isWinCoord: boolean,
       value: string,
       onSquareClick: any,
     }
 ) {
   return (
-    <Button variant="text" sx={{ width: 160, height: 160 }}
+    <Button variant="text" sx={{ width: boxSizePx, height: boxSizePx, fontSize: boxSizePx-10, fontWeight: 'medium', color: isWinCoord? 'blue': 'black'  }}
       onClick={onSquareClick}
-      className="square" >
+      className="square"  >
       {value}
     </Button>
   )
@@ -78,9 +82,6 @@ function calculateWinner(board: string[][]): string {
 }
 
 function Board() {
-  const row = 5
-  const col = 4
-  const boxSizePx = 150
   const [currentPlayer, setNextPlayer] = useState<string>('X')
   const [squares, setSquares] = useState<string[][]>([...Array(row)].map(_ => Array(col).fill("")))
   const [isGameFinished, setIsGameFinished ] = useState<boolean>(false)
@@ -134,7 +135,7 @@ function Board() {
             lines.map(  (item, indexX) => 
             // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
               <Grid xs={4} sx= {{ height: boxSizePx, width: boxSizePx }}>
-              <Square key={"square-"+ (indexY*row+indexX)} value={item} onSquareClick={() => handleClick(indexY, indexX)} coord={indexY*row+indexX} />
+              <Square key={"square-"+ (indexY*row+indexX)} value={item} onSquareClick={() => handleClick(indexY, indexX)} isWinCoord={false} />
               </Grid>
       
            )
