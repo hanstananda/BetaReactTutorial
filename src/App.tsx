@@ -112,7 +112,8 @@ function Board() {
     setSquares(nextSquares)
   }
   return (
-    <Stack spacing={2}>
+    <Stack spacing={3} justifyContent="center" alignItems="center">
+      <Box>
       <Grid container sx={{
           '--Grid-borderWidth': '1px',
           borderTop: 'var(--Grid-borderWidth) solid',
@@ -143,6 +144,7 @@ function Board() {
         </Grid>
       ) )}
       </Grid>
+      </Box>
       <Typography variant="h5">{status}</Typography>
       </Stack>
   )
@@ -161,7 +163,7 @@ function App() {
       {/* Refer to https://mui.com/material-ui/react-app-bar/ for Second Toolbar component */}
       <Toolbar />
       <Container>
-        <Paper variant="outlined" sx={{ textAlign: 'center' , p:2 }}  >
+        <Paper variant="outlined" sx={{ textAlign: 'center' , p: 5 , m:2, width: boxSizePx*(col+1) }}  >
         <Board />
         </Paper>
       </Container>
