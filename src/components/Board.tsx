@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
@@ -9,6 +9,7 @@ import { row, col } from "../App";
 import calculateWinner from "../logic/calculateWinner";
 
 function Board() {
+  // TODO: Use context for these, extract more functions out 
   const [currentPlayer, setNextPlayer] = useState<string>("X");
   const [squares, setSquares] = useState<string[][]>(
     [...Array(row)].map((_) => Array(col).fill(""))

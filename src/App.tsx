@@ -1,14 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Container from '@mui/material/Container';
 
 import './App.css'
-import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
-import { fabClasses } from '@mui/material';
 import { boxSizePx } from './const/GameGrid';
 import Board from './components/Board';
 
