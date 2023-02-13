@@ -12,6 +12,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import { fabClasses } from '@mui/material';
 
 const boxSizePx = 150
 const row = 3
@@ -38,7 +39,7 @@ function Square(
   )
 }
 
-function calculateWinner(board: string[][]): string {
+function calculateWinner(board: string[][]): [string, boolean[][]] {
   // used to calculate traverse path of the squares
   // down, right, right-down, left-down
   const posChecksY = [1, 0, 1, 1]
@@ -46,12 +47,15 @@ function calculateWinner(board: string[][]): string {
   // assumes board is well-formed
   const row = board.length
   const col = board[0].length
+  let winMap = [...Array(row)].map(_ => Array(col).fill(false))
+  let countFilled=0
   for (let y = 0; y < row; y++) {
     for (let x = 0; x < col; x++) {
       const res = board[y][x]
       if (board[y][x] == '') {
         continue
       }
+      countFilled+=1
       // check for each probable win scenario
       for (let i = 0; i < posChecksX.length; i++) {
         let isWin = true
@@ -73,24 +77,41 @@ function calculateWinner(board: string[][]): string {
           }
         }
         if (isWin) {
-          return res
+          // backtrack and mark winning board
+          let nextY = y
+          let nextX = x
+          for (let j = 0; j < Math.min(row, col); j++) {
+            winMap[nextY][nextX] = true
+            nextY += posChecksY[i]
+            nextX += posChecksX[i]
+          }
+          return [res, winMap]
         }
       }
     }
   }
-  return ""
+  if (countFilled== row*col) {
+    return ["tie", winMap]
+  }
+  return ["", winMap]
 }
 
 function Board() {
   const [currentPlayer, setNextPlayer] = useState<string>('X')
   const [squares, setSquares] = useState<string[][]>([...Array(row)].map(_ => Array(col).fill("")))
+  const [winSquares, setWinSquares] = useState<boolean[][]>([...Array(row)].map(_ => Array(col).fill(false)))
   const [isGameFinished, setIsGameFinished ] = useState<boolean>(false)
 
   const winner = calculateWinner(squares);
   let status;
-  if (winner != "") {
-    status = "Winner is " + winner
+  if (winner[0] != "") {
+    if (winner[0]=="tie") {
+      status = "Game is a tie!"
+    } else {
+      status = "Winner is " + winner[0]
+    }
     if (!isGameFinished) {
+      setWinSquares(winner[1])
       setIsGameFinished(true)
     }
   } else {
@@ -136,7 +157,7 @@ function Board() {
             lines.map(  (item, indexX) => 
             // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
               <Grid xs={4} sx= {{ height: boxSizePx, width: boxSizePx }}>
-              <Square key={"square-"+ (indexY*row+indexX)} value={item} onSquareClick={() => handleClick(indexY, indexX)} isWinCoord={false} />
+              <Square key={"square-"+ (indexY*row+indexX)} value={item} onSquareClick={() => handleClick(indexY, indexX)} isWinCoord={winSquares[indexY][indexX]} />
               </Grid>
       
            )
@@ -162,7 +183,7 @@ function App() {
       </AppBar>
       {/* Refer to https://mui.com/material-ui/react-app-bar/ for Second Toolbar component */}
       <Toolbar />
-      <Container>
+      <Container sx={{ justifyContent:'center', alignItems:'center' }}>
         <Paper variant="outlined" sx={{ textAlign: 'center' , p: 5 , m:2, width: boxSizePx*(col+1) }}  >
         <Board />
         </Paper>
