@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import { boxSizePx } from "../const/GameGrid";
+import { boxSizePx } from "../contexts/GameGrid";
 
 function Square(
   {

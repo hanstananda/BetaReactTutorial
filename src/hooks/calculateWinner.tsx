@@ -1,16 +1,21 @@
 // used to calculate traverse path of the squares
+
+import { useContext } from "react";
+import { BoardCfgContext } from "../contexts/BoardCfgContext";
+
 // down, right, right-down, left-down
 const posChecksY = [1, 0, 1, 1];
 const posChecksX = [0, 1, 1, -1];
 
 function calculateWinner(board: string[][]): [string, boolean[][]] {
   // assumes board is well-formed
-  const row = board.length;
-  const col = board[0].length;
-  let winMap = [...Array(row)].map((_) => Array(col).fill(false));
+  const BoardConfig = useContext(BoardCfgContext);
+  const rowSize = BoardConfig.rowSize
+  const colSize = BoardConfig.colSize
+  let winMap = [...Array(rowSize)].map((_) => Array(colSize).fill(false));
   let countFilled = 0;
-  for (let y = 0; y < row; y++) {
-    for (let x = 0; x < col; x++) {
+  for (let y = 0; y < rowSize; y++) {
+    for (let x = 0; x < colSize; x++) {
       const res = board[y][x];
       if (board[y][x] == "") {
         continue;
@@ -22,11 +27,11 @@ function calculateWinner(board: string[][]): [string, boolean[][]] {
         // check for consecutive symbols
         let nextY = y;
         let nextX = x;
-        for (let j = 1; j < Math.min(row, col); j++) {
+        for (let j = 1; j < Math.min(rowSize, colSize); j++) {
           nextY += posChecksY[i];
           nextX += posChecksX[i];
           // check valid coord
-          if (nextY < 0 || nextX < 0 || nextY >= row || nextX >= col) {
+          if (nextY < 0 || nextX < 0 || nextY >= rowSize || nextX >= colSize) {
             isWin = false;
             break;
           }
@@ -40,7 +45,7 @@ function calculateWinner(board: string[][]): [string, boolean[][]] {
           // backtrack and mark winning board
           let nextY = y;
           let nextX = x;
-          for (let j = 0; j < Math.min(row, col); j++) {
+          for (let j = 0; j < Math.min(rowSize, colSize); j++) {
             winMap[nextY][nextX] = true;
             nextY += posChecksY[i];
             nextX += posChecksX[i];
@@ -50,7 +55,7 @@ function calculateWinner(board: string[][]): [string, boolean[][]] {
       }
     }
   }
-  if (countFilled == row * col) {
+  if (countFilled == rowSize * colSize) {
     return ["tie", winMap];
   }
   return ["", winMap];

@@ -1,21 +1,25 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Square from "./Square";
-import { boxSizePx } from "../const/GameGrid";
-import { row, col } from "../App";
-import calculateWinner from "../logic/calculateWinner";
+import { boxSizePx } from "../contexts/GameGrid";
+import { BoardCfgContext } from "../contexts/BoardCfgContext";
+import calculateWinner from "../hooks/calculateWinner";
+import classes from './Board.module.css'
 
 function Board() {
   // TODO: Use context for these, extract more functions out 
+  const BoardConfig = useContext(BoardCfgContext);
+  const rowSize = BoardConfig.rowSize
+  const colSize = BoardConfig.colSize
   const [currentPlayer, setNextPlayer] = useState<string>("X");
   const [squares, setSquares] = useState<string[][]>(
-    [...Array(row)].map((_) => Array(col).fill(""))
+    [...Array(rowSize)].map((_) => Array(colSize).fill(""))
   );
   const [winSquares, setWinSquares] = useState<boolean[][]>(
-    [...Array(row)].map((_) => Array(col).fill(false))
+    [...Array(rowSize)].map((_) => Array(colSize).fill(false))
   );
   const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
 
@@ -54,6 +58,7 @@ function Board() {
       <Box>
         <Grid
           container
+          // className={classes.gameGrid}
           sx={{
             "--Grid-borderWidth": "1px",
             borderTop: "var(--Grid-borderWidth) solid",
@@ -63,7 +68,7 @@ function Board() {
               borderBottom: "var(--Grid-borderWidth) solid",
               borderColor: "divider",
             },
-            width: boxSizePx * col + 2, // Small hack to fix the Grid size XD
+            width: boxSizePx * colSize + 2, // Small hack to fix the Grid size XD
           }}
         >
           {squares.map((lines, indexY) => (
@@ -81,7 +86,7 @@ function Board() {
                 // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
                 <Grid xs={4} sx={{ height: boxSizePx, width: boxSizePx }}>
                   <Square
-                    key={"square-" + (indexY * row + indexX)}
+                    key={"square-" + (indexY * rowSize + indexX)}
                     value={item}
                     onSquareClick={() => handleClick(indexY, indexX)}
                     isWinCoord={winSquares[indexY][indexX]}

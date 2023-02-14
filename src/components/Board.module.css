@@ -1,0 +1,12 @@
+.gameGrid{
+    --Grid-borderWidth: 1px;
+    border-top: var(--Grid-borderWidth) solid;
+    border-left:  var(--Grid-borderWidth) solid;
+    border-color: divider;
+}
+
+.gameGrid div{
+    --Grid-borderWidth: 1px;
+    border-bottom: var(--Grid-borderWidth) solid;
+    border-color: divider;
+}
