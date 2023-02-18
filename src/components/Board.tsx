@@ -1,13 +1,13 @@
 import { useContext, useState } from "react";
-import Box from "@mui/material/Box";
+
 import Grid from "@mui/material/Unstable_Grid2";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
+
 import Square from "./Square";
 import { boxSizePx } from "../contexts/GameGrid";
 import { BoardCfgContext } from "../contexts/BoardCfgContext";
 import calculateWinner from "../hooks/calculateWinner";
 import classes from "./Board.module.scss";
+import { OnPlay, BoardInfo } from "./Game";
 
 // TODO: type Function properly by making interface, e.g.
 /*
@@ -16,79 +16,74 @@ interface SearchFunc {
 }
 */
 function Board({
-  squares = [...Array(3)].map((_) => Array(3).fill("")),
+  boardInfo = {
+    squares: [...Array(3)].map((_) =>
+      Array(3).fill({ value: "", isWinSquare: false })
+    ),
+    gameFinished: false,
+    winner: "",
+  },
   handlePlay = () => {},
 }: {
-  squares: string[][];
-  handlePlay: Function;
+  boardInfo: BoardInfo;
+  handlePlay: OnPlay;
 }) {
   const BoardConfig = useContext(BoardCfgContext);
   const rowSize = BoardConfig.rowSize;
   const colSize = BoardConfig.colSize;
-  // TODO: Use context for these, extract more functions out
-  const [currentPlayer, setNextPlayer] = useState<string>("X");
-  const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
-  const [winSquares, setWinSquares] = useState<boolean[][]>(
-    [...Array(rowSize)].map((_) => Array(colSize).fill(false))
-  );
+  // TODO: Use context for this, extract more functions out
+  const [currentPlayer, setNextPlayer] = useState<string>("X");  
 
-  const winner = calculateWinner(squares);
-  let status;
-  if (winner[0] != "") {
-    if (winner[0] == "tie") {
-      status = "Game is a tie!";
-    } else {
-      status = "Winner is " + winner[0];
-    }
-    if (!isGameFinished) {
-      setWinSquares(winner[1]);
-      setIsGameFinished(true);
-    }
-  } else {
-    status = "Current Turn: " + currentPlayer;
-  }
+  // TODO: Find a better way to calculate winner, may not need to bloat boardInfo with winning squares, etc. 
+  const calculatedBoardInfo = calculateWinner(boardInfo);
+  console.log("calculated square is %o", calculatedBoardInfo);
 
   function handleClick(i: number, j: number) {
-    if (squares[i][j] != "") {
+    if (boardInfo.squares[i][j].value != "") {
+      // illegal move, place already taken
       return;
     }
-    if (isGameFinished) {
+    if (boardInfo.gameFinished) {
+      // illegal move, game already finished
       return;
     }
-    const nextSquares = squares.map((squares) => squares.slice());
+    // Create deep copy of board object 
+    const updatedBoardInfo = {
+      squares: boardInfo.squares.map(row => row.slice()),
+      gameFinished: boardInfo.gameFinished,
+      winner: boardInfo.winner,
+    }
+
     console.log("editing row " + i + " col " + j);
-    nextSquares[i][j] = currentPlayer;
+    // stupid way to deepcopy an object 
+    
+    updatedBoardInfo.squares[i][j].value = currentPlayer;
     setNextPlayer(currentPlayer == "X" ? "O" : "X");
-    console.log("next square is " + nextSquares);
-    handlePlay(nextSquares);
+    console.log("next square is %o", updatedBoardInfo);
+    handlePlay(updatedBoardInfo);
   }
+  
   return (
-    <Stack spacing={3} justifyContent="center" alignItems="center">
-      <Box>
-        <Grid
-          container
-          className={classes.rowGrid}
-          sx={{ width: boxSizePx * colSize + 2 }} // Small hack to fix the Grid size XD
-        >
-          {squares.map((lines, indexY) => (
-            <Grid container className={classes.colGrid} spacing={0}>
-              {lines.map((item, indexX) => (
-                // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
-                <Grid xs={4} sx={{ height: boxSizePx, width: boxSizePx }}>
-                  <Square
-                    key={"square-" + (indexY * rowSize + indexX)}
-                    value={item}
-                    onSquareClick={() => handleClick(indexY, indexX)}
-                    isWinCoord={winSquares[indexY][indexX]}
-                  />
-                </Grid>
-              ))}
+    <Grid
+      container
+      className={classes.rowGrid}
+      sx={{ width: boxSizePx * colSize + 2 }} // Small hack to fix the Grid size XD
+    >
+      {calculatedBoardInfo.squares.map((lines, indexY) => (
+        <Grid container className={classes.colGrid} spacing={0}>
+          {lines.map((item, indexX) => (
+            // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
+            <Grid xs={4} sx={{ height: boxSizePx, width: boxSizePx }}>
+              <Square
+                key={"square-" + (indexY * rowSize + indexX)}
+                squareData={item}
+                onSquareClick={() => handleClick(indexY, indexX)}
+              />
             </Grid>
           ))}
         </Grid>
-      </Box>
-      <Typography variant="h5">{status}</Typography>
-    </Stack>
+      ))}
+    </Grid>
   );
 }
 

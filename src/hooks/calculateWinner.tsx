@@ -1,23 +1,24 @@
 // used to calculate traverse path of the squares
 
 import { useContext } from "react";
+import { BoardInfo } from "../components/Game";
 import { BoardCfgContext } from "../contexts/BoardCfgContext";
 
 // down, right, right-down, left-down
 const posChecksY = [1, 0, 1, 1];
 const posChecksX = [0, 1, 1, -1];
 
-function calculateWinner(board: string[][]): [string, boolean[][]] {
+function calculateWinner(boardInfo: BoardInfo): BoardInfo {
   // assumes board is well-formed
   const BoardConfig = useContext(BoardCfgContext);
   const rowSize = BoardConfig.rowSize
   const colSize = BoardConfig.colSize
-  let winMap = [...Array(rowSize)].map((_) => Array(colSize).fill(false));
+  const board = boardInfo.squares
   let countFilled = 0;
   for (let y = 0; y < rowSize; y++) {
     for (let x = 0; x < colSize; x++) {
-      const res = board[y][x];
-      if (board[y][x] == "") {
+      const curSymbol = board[y][x].value;
+      if (board[y][x].value == "") {
         continue;
       }
       countFilled += 1;
@@ -35,8 +36,8 @@ function calculateWinner(board: string[][]): [string, boolean[][]] {
             isWin = false;
             break;
           }
-          console.log(i, j, nextX, nextY, res, board[nextY][nextX]);
-          if (board[nextY][nextX] != res) {
+          console.log(i, j, nextX, nextY, curSymbol, board[nextY][nextX]);
+          if (board[nextY][nextX].value != curSymbol) {
             isWin = false;
             break;
           }
@@ -46,19 +47,22 @@ function calculateWinner(board: string[][]): [string, boolean[][]] {
           let nextY = y;
           let nextX = x;
           for (let j = 0; j < Math.min(rowSize, colSize); j++) {
-            winMap[nextY][nextX] = true;
+            board[nextY][nextX].isWinSquare = true;
             nextY += posChecksY[i];
             nextX += posChecksX[i];
           }
-          return [res, winMap];
+          boardInfo.winner = curSymbol;
+          boardInfo.gameFinished = true;
+          return boardInfo; // immediately return to exit for loop
         }
       }
     }
   }
   if (countFilled == rowSize * colSize) {
-    return ["tie", winMap];
+    boardInfo.gameFinished = true;
+    boardInfo.winner = "tie";
   }
-  return ["", winMap];
+  return boardInfo;
 }
 
 export default calculateWinner;

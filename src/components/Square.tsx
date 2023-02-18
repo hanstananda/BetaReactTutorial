@@ -1,19 +1,19 @@
 import Button from '@mui/material/Button';
 import { boxSizePx } from "../contexts/GameGrid";
+import { SquareData } from './Game';
 
 function Square(
   {
-    isWinCoord = false, value, onSquareClick,
+    squareData, onSquareClick,
   }: {
-    isWinCoord: boolean;
-    value: string;
+    squareData: SquareData;
     onSquareClick: any;
   }) {
   return (
-    <Button variant="text" sx={{ width: boxSizePx, height: boxSizePx, fontSize: boxSizePx - 10, fontWeight: 'medium', color: isWinCoord ? 'blue' : 'black' }}
+    <Button variant="text" sx={{ width: boxSizePx, height: boxSizePx, fontSize: boxSizePx - 10, fontWeight: 'medium', color: squareData.isWinSquare ? 'blue' : 'black' }}
       onClick={onSquareClick}
       className="square">
-      {value}
+      {squareData.value}
     </Button>
   );
 }
