@@ -9,19 +9,28 @@ import { BoardCfgContext } from "../contexts/BoardCfgContext";
 import calculateWinner from "../hooks/calculateWinner";
 import classes from "./Board.module.scss";
 
-function Board() {
-  // TODO: Use context for these, extract more functions out
+// TODO: type Function properly by making interface, e.g.
+/*
+interface SearchFunc {
+  (source: string, subString: string): boolean;
+}
+*/
+function Board({
+  squares = [...Array(3)].map((_) => Array(3).fill("")),
+  handlePlay = () => {},
+}: {
+  squares: string[][];
+  handlePlay: Function;
+}) {
   const BoardConfig = useContext(BoardCfgContext);
   const rowSize = BoardConfig.rowSize;
   const colSize = BoardConfig.colSize;
+  // TODO: Use context for these, extract more functions out
   const [currentPlayer, setNextPlayer] = useState<string>("X");
-  const [squares, setSquares] = useState<string[][]>(
-    [...Array(rowSize)].map((_) => Array(colSize).fill(""))
-  );
+  const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
   const [winSquares, setWinSquares] = useState<boolean[][]>(
     [...Array(rowSize)].map((_) => Array(colSize).fill(false))
   );
-  const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
 
   const winner = calculateWinner(squares);
   let status;
@@ -51,7 +60,7 @@ function Board() {
     nextSquares[i][j] = currentPlayer;
     setNextPlayer(currentPlayer == "X" ? "O" : "X");
     console.log("next square is " + nextSquares);
-    setSquares(nextSquares);
+    handlePlay(nextSquares);
   }
   return (
     <Stack spacing={3} justifyContent="center" alignItems="center">

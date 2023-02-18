@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import { boxSizePx } from './contexts/GameGrid';
 import Board from './components/Board';
 import { BoardCfgContext } from './contexts/BoardCfgContext';
+import Game from './components/Game';
 
 export const row = 3
 export const col = 3
@@ -33,7 +34,7 @@ function App() {
       <Container sx={{ justifyContent:'center', alignItems:'center' }}>
         <Paper variant="outlined" sx={{ textAlign: 'center' , p: 5 , m:2, width: boxSizePx*(col+1) }}  >
           <BoardCfgContext.Provider value={boardCfg}>
-          <Board />
+          <Game />
           </BoardCfgContext.Provider>
         </Paper>
       </Container>
