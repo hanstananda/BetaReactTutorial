@@ -80,10 +80,7 @@ export default function Game() {
   return (
     <Stack spacing={3} justifyContent="center" alignItems="center">
       <Box>
-        <Board
-          boardInfo={currentBoardInfo}
-          handlePlay={handlePlay}
-        />
+        <Board boardInfo={currentBoardInfo} handlePlay={handlePlay} />
       </Box>
       <Typography variant="h5">{status}</Typography>
       {/* Create an undo button that's disabled for 0th turn */}
