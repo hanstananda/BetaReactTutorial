@@ -19,39 +19,13 @@ interface SearchFunc {
 function Board({
   boardInfo,
   handlePlay,
-  currentPlayer,
 }: {
   boardInfo: BoardInfo;
   handlePlay: OnPlay;
-  currentPlayer: string;
 }) {
   const BoardConfig = useContext(BoardCfgContext);
   const rowSize = BoardConfig.rowSize;
   const colSize = BoardConfig.colSize;
-
-  // TODO: Find a better way to calculate winner, may not need to bloat boardInfo with winning squares, etc.
-  const calculatedBoardInfo = calculateWinner(boardInfo);
-  console.log("calculated square is %o", calculatedBoardInfo);
-
-  function handleClick(i: number, j: number) {
-    if (boardInfo.squares[i][j].value != "") {
-      // illegal move, place already taken
-      return;
-    }
-    if (boardInfo.gameFinished) {
-      // illegal move, game already finished
-      return;
-    }
-    // Create deep copy of board object
-    const updatedBoardInfo = structuredClone(boardInfo);
-
-    console.log("editing row " + i + " col " + j);
-    // stupid way to deepcopy an object
-
-    updatedBoardInfo.squares[i][j].value = currentPlayer;
-    console.log("next square is %o", updatedBoardInfo);
-    handlePlay(updatedBoardInfo);
-  }
 
   return (
     <Grid
@@ -59,7 +33,7 @@ function Board({
       className={classes.rowGrid}
       sx={{ width: boxSizePx * colSize + 2 }} // Small hack to fix the Grid size XD
     >
-      {calculatedBoardInfo.squares.map((lines, indexY) => (
+      {boardInfo.squares.map((lines, indexY) => (
         // Key is used to suppress Warning: Each child in a list should have a unique "key" prop.
         <Grid
           container
@@ -76,7 +50,7 @@ function Board({
               <Square
                 key={"square-" + (indexY * rowSize + indexX)}
                 squareData={item}
-                onSquareClick={() => handleClick(indexY, indexX)}
+                onSquareClick={() => handlePlay(boardInfo, indexY, indexX)}
               />
             </Grid>
           ))}

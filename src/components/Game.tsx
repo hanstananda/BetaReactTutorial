@@ -10,7 +10,7 @@ import { BoardInfo } from "../types/BoardInfo";
 import { getStatusText } from "../utils/getStatusText";
 
 export interface OnPlay {
-  (board: BoardInfo): void;
+  (board: BoardInfo, selectedRow: number, selectedCol: number): void;
 }
 
 export default function Game() {
@@ -41,8 +41,28 @@ export default function Game() {
   ]);
   const currentBoardInfo = history[turn];
 
-  function handlePlay(boardInfo: BoardInfo) {
-    const calculatedBoardInfo = calculateWinner(boardInfo);
+  function handlePlay(
+    boardInfo: BoardInfo,
+    selectedRow: number,
+    selectedCol: number
+  ) {
+    if (boardInfo.squares[selectedRow][selectedCol].value != "") {
+      // illegal move, place already taken
+      return;
+    }
+    if (boardInfo.gameFinished) {
+      // illegal move, game already finished
+      return;
+    }
+    // Create deep copy of board object
+    const updatedBoardInfo = structuredClone(boardInfo);
+
+    console.log("editing row " + selectedRow + " col " + selectedCol);
+    // stupid way to deepcopy an object
+
+    updatedBoardInfo.squares[selectedRow][selectedCol].value = currentPlayer;
+
+    const calculatedBoardInfo = calculateWinner(updatedBoardInfo);
     const nextHistory = [...history.slice(0, turn + 1), calculatedBoardInfo];
     setHistory(nextHistory);
     setTurn(nextHistory.length - 1);
@@ -55,7 +75,7 @@ export default function Game() {
   console.log("Now on turn %d with board state %o", turn, currentBoardInfo);
   console.log("History is %o", history);
 
-  let status = getStatusText(currentBoardInfo, currentPlayer);
+  const status = getStatusText(currentBoardInfo, currentPlayer);
 
   return (
     <Stack spacing={3} justifyContent="center" alignItems="center">
@@ -63,7 +83,6 @@ export default function Game() {
         <Board
           boardInfo={currentBoardInfo}
           handlePlay={handlePlay}
-          currentPlayer={currentPlayer}
         />
       </Box>
       <Typography variant="h5">{status}</Typography>
