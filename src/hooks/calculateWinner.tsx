@@ -1,19 +1,18 @@
 // used to calculate traverse path of the squares
 
-import { useContext } from "react";
-import { BoardInfo } from "../components/Game";
-import { BoardCfgContext } from "../contexts/BoardCfgContext";
+import { BoardInfo } from "../types/BoardInfo";
 
 // down, right, right-down, left-down
 const posChecksY = [1, 0, 1, 1];
 const posChecksX = [0, 1, 1, -1];
 
-function calculateWinner(boardInfo: BoardInfo): BoardInfo {
+export default function calculateWinner(boardInfo: BoardInfo): BoardInfo {
+  // ensure we don't mutate original object
+  const computedBoardInfo = structuredClone(boardInfo);
   // assumes board is well-formed
-  const BoardConfig = useContext(BoardCfgContext);
-  const rowSize = BoardConfig.rowSize
-  const colSize = BoardConfig.colSize
-  const board = boardInfo.squares
+  const rowSize = computedBoardInfo.squares.length;
+  const colSize = computedBoardInfo.squares[0].length;
+  const board = computedBoardInfo.squares;
   let countFilled = 0;
   for (let y = 0; y < rowSize; y++) {
     for (let x = 0; x < colSize; x++) {
@@ -51,18 +50,16 @@ function calculateWinner(boardInfo: BoardInfo): BoardInfo {
             nextY += posChecksY[i];
             nextX += posChecksX[i];
           }
-          boardInfo.winner = curSymbol;
-          boardInfo.gameFinished = true;
-          return boardInfo; // immediately return to exit for loop
+          computedBoardInfo.winner = curSymbol;
+          computedBoardInfo.gameFinished = true;
+          return computedBoardInfo; // immediately return to exit for loop
         }
       }
     }
   }
   if (countFilled == rowSize * colSize) {
-    boardInfo.gameFinished = true;
-    boardInfo.winner = "tie";
+    computedBoardInfo.gameFinished = true;
+    computedBoardInfo.winner = "tie";
   }
-  return boardInfo;
+  return computedBoardInfo;
 }
-
-export default calculateWinner;

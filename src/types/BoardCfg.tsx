@@ -1,5 +1,4 @@
 export interface BoardCfgType {
-    rowSize: number,
-    colSize: number,
+  rowSize: number;
+  colSize: number;
 }
-  
