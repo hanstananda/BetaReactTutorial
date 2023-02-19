@@ -1,9 +1,5 @@
 import { createContext } from 'react';
-
-export interface BoardCfgType {
-  rowSize: number,
-  colSize: number,
-}
+import { BoardCfgType } from '../types/BoardCfg';
 
 export const BoardCfgContext = createContext<BoardCfgType>(
   {

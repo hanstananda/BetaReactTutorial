@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
 
 import Square from "./Square";
-import { boxSizePx } from "../contexts/GameGrid";
+import { boxSizePx } from "../types/GameGrid";
 import { BoardCfgContext } from "../contexts/BoardCfgContext";
 import calculateWinner from "../hooks/calculateWinner";
 import classes from "./Board.module.scss";
@@ -24,15 +24,15 @@ function Board({
     winner: "",
   },
   handlePlay = () => {},
+  currentPlayer,
 }: {
   boardInfo: BoardInfo;
   handlePlay: OnPlay;
+  currentPlayer: string;
 }) {
   const BoardConfig = useContext(BoardCfgContext);
   const rowSize = BoardConfig.rowSize;
   const colSize = BoardConfig.colSize;
-  // TODO: Use context for this, extract more functions out
-  const [currentPlayer, setNextPlayer] = useState<string>("X");  
 
   // TODO: Find a better way to calculate winner, may not need to bloat boardInfo with winning squares, etc. 
   const calculatedBoardInfo = calculateWinner(boardInfo);
@@ -48,17 +48,12 @@ function Board({
       return;
     }
     // Create deep copy of board object 
-    const updatedBoardInfo = {
-      squares: boardInfo.squares.map(row => row.slice()),
-      gameFinished: boardInfo.gameFinished,
-      winner: boardInfo.winner,
-    }
+    const updatedBoardInfo = structuredClone(boardInfo);
 
     console.log("editing row " + i + " col " + j);
     // stupid way to deepcopy an object 
     
     updatedBoardInfo.squares[i][j].value = currentPlayer;
-    setNextPlayer(currentPlayer == "X" ? "O" : "X");
     console.log("next square is %o", updatedBoardInfo);
     handlePlay(updatedBoardInfo);
   }

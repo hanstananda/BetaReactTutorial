@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import { boxSizePx } from "../contexts/GameGrid";
+import { boxSizePx } from "../types/GameGrid";
 import { SquareData } from './Game';
 
 function Square(

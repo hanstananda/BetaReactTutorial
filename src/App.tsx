@@ -2,12 +2,11 @@ import React from 'react'
 import { useContext, useState } from 'react';
 import Container from '@mui/material/Container';
 
-import './App.css'
 import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
-import { boxSizePx } from './contexts/GameGrid';
+import { boxSizePx } from './types/GameGrid';
 import Board from './components/Board';
 import { BoardCfgContext } from './contexts/BoardCfgContext';
 import Game from './components/Game';
