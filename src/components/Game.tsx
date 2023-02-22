@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { BoardCfgContext } from "../contexts/BoardCfgContext";
+import { useBoardCfgStore } from "../stores/BoardCfgContext";
 import Board from "./Board";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -14,12 +14,12 @@ export interface OnPlay {
 }
 
 export default function Game() {
-  const BoardConfig = useContext(BoardCfgContext);
-  const rowSize = BoardConfig.rowSize;
-  const colSize = BoardConfig.colSize;
+  const rowSize = useBoardCfgStore((state) => state.rowSize)
+  const colSize = useBoardCfgStore((state) => state.rowSize)
 
   const [turn, setTurn] = useState<number>(0);
   const currentPlayer = turn % 2 == 0 ? "X" : "O";
+  console.log(currentPlayer)
 
   const [history, setHistory] = useState<BoardInfo[]>([
     {
@@ -58,7 +58,8 @@ export default function Game() {
     const updatedBoardInfo = structuredClone(boardInfo);
 
     console.log("editing row " + selectedRow + " col " + selectedCol);
-    // stupid way to deepcopy an object
+
+    // May want to try use reducers...
 
     updatedBoardInfo.squares[selectedRow][selectedCol].value = currentPlayer;
 

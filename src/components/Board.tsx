@@ -4,11 +4,11 @@ import Grid from "@mui/material/Unstable_Grid2";
 
 import Square from "./Square";
 import { boxSizePx } from "../types/Boardconst";
-import { BoardCfgContext } from "../contexts/BoardCfgContext";
 import calculateWinner from "../hooks/calculateWinner";
 import classes from "./Board.module.scss";
 import { OnPlay } from "./Game";
 import { BoardInfo } from "../types/BoardInfo";
+import { useBoardCfgStore } from "../stores/BoardCfgContext";
 
 // TODO: type Function properly by making interface, e.g.
 /*
@@ -23,9 +23,9 @@ function Board({
   boardInfo: BoardInfo;
   handlePlay: OnPlay;
 }) {
-  const BoardConfig = useContext(BoardCfgContext);
-  const rowSize = BoardConfig.rowSize;
-  const colSize = BoardConfig.colSize;
+  const rowSize = useBoardCfgStore((state) => state.rowSize)
+  const colSize = useBoardCfgStore((state) => state.rowSize)
+  
 
   return (
     <Grid
