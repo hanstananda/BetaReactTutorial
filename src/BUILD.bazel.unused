@@ -1,0 +1,27 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+
+ASSET_PATTERNS = [
+    "**/*.svg",
+    "**/*.css",
+]
+
+SRC_PATTERNS = [
+    "**/*.tsx",
+    "**/*.ts",
+]
+
+# Filename conventions described at
+# https://create-react-app.dev/docs/running-tests#filename-conventions
+TEST_PATTERNS = [
+    "*.test.tsx",
+    "*.test.ts",
+    "*.spec.tsx",
+    "*.spec.ts",
+]
+
+# Just give everything to vite :)
+js_library(
+    name = "src",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"],
+)

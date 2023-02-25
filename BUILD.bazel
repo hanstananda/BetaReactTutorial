@@ -1,29 +1,68 @@
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
-load("@npm//:vite/package_json.bzl", vite_bin="bin")
+load("@npm//:vite/package_json.bzl", vite_bin = "bin")
+load("@npm//:typescript/package_json.bzl", tsc_bin = "bin")
 
 npm_link_all_packages(name = "node_modules")
 
 DEPS = [
-    "//src", 
-    # "//public",
-    # "package.json",
-    #  ":node_modules/@mui/material",
-    #  ":node_modules/react",
-    #  ":node_modules/react-dom",
-    #  ":node_modules/react-router-dom",
-    # ":node_modules/typescript",
-    # ":node_modules/zustand",
+    "src",
+    "//public",
+    "package.json",
+    "index_html",
+    "vite_config",
+    ":node_modules/@mui/material",
+    ":node_modules/react",
+    ":node_modules/react-dom",
+    ":node_modules/react-router-dom",
+    ":node_modules/typescript",
+    ":node_modules/zustand",
+    ":node_modules/@vitejs/plugin-react",
+    ":node_modules/vite",
+    ":node_modules/@emotion/react",
+    ":node_modules/@emotion/styled", 
+    ":node_modules/@fontsource/roboto",
 ]
 
+js_library(
+    name = "src",
+    srcs = glob(["src/**/*"]),
+    visibility = ["//visibility:public"],
+)
 
+tsc_bin.tsc_binary(
+    name = "tsc",
+    data = [
+        "//src",
+    ],
+)
 
-vite_bin.vite(
-    name="vite", 
+vite_bin.vite_binary(
+    name = "vite-dev",
+    data = DEPS,
+)
+
+vite_bin.vite_binary(
+    name = "vite-build",
     args = ["build"],
-    srcs = DEPS,
-    out_dirs = ["build"],
+    data = DEPS,
+)
+
+js_library(
+    name = "vite_config",
+    srcs = [
+        "vite.config.d.ts",
+        "vite.config.js",
+        "vite.config.ts",
+    ],
+)
+
+js_library(
+    name = "index_html",
+    srcs = [
+        "index.html",
+    ]
 )
 
 js_library(
@@ -37,7 +76,6 @@ ts_config(
     src = "tsconfig.json",
     visibility = ["//visibility:public"],
 )
-
 
 # js_binary(
 #     name="vite",
