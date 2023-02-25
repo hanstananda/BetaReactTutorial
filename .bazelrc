@@ -1,0 +1,4 @@
+startup --output_user_root=D:/.bazel_root
+startup --windows_enable_symlinks
+
+build --enable_runfiles
