@@ -13,45 +13,51 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { useBoardCfgStore } from "../stores/BoardCfgContext";
 
 const possibleSizes = Array(maxSquares - minSquares + 1)
-.fill(0)
-.map((_, i) => i + minSquares);
+  .fill(0)
+  .map((_, i) => i + minSquares);
 
 function sizeOptions(type: string, size: number) {
-  const result = <Box>
-  <InputLabel id="Row size">Row size</InputLabel>
-  <Select
-    value={size.toString(10)}
-    label="Row size"
-    id="Row size"
-    onChange={(event: SelectChangeEvent) =>
-      useBoardCfgStore((state) => state.setColSize(parseInt(event.target.value)))
+  const setter = (() => {
+    switch (type.toLowerCase()) {
+      case "row":
+        return useBoardCfgStore((state) => state.setRowSize);
+      case "col":
+      default:
+        return useBoardCfgStore((state) => state.setColSize);
     }
-  >
-    {possibleSizes.map((value, _) => (
-      <MenuItem key={"rowSize-" + value} value={value}>
-        {value}
-      </MenuItem>
-    ))}
-  </Select>
-</Box>
-return result;
+  })();
+  // const setRowSize = useBoardCfgStore(state => state.setRowSize)
+  const name = type + " size";
+  const result = (
+    <Box>
+      <InputLabel id={name}>{name}</InputLabel>
+      <Select
+        value={size.toString(10)}
+        label={name}
+        id={name}
+        onChange={(event: SelectChangeEvent) =>
+          setter(parseInt(event.target.value))
+        }
+      >
+        {possibleSizes.map((value, _) => (
+          <MenuItem key={name + value} value={value}>
+            {value}
+          </MenuItem>
+        ))}
+      </Select>
+    </Box>
+  );
+  return result;
 }
 
 function SetupMenu() {
-  const rowSize = useBoardCfgStore((state) => state.rowSize)
-  const colSize = useBoardCfgStore((state) => state.rowSize)
+  const rowSize = useBoardCfgStore((state) => state.rowSize);
+  const colSize = useBoardCfgStore((state) => state.colSize);
 
-  const rowOptions = sizeOptions("row", rowSize)
+  const rowOptions = sizeOptions("Row", rowSize);
+  const colOptions = sizeOptions("Col", colSize);
 
-  function setRowSize(rowSize: number) {
-    useBoardCfgStore((state) => state.setRowSize(rowSize))
-  }
-
-  function setColSize(colSize: number) {
-    useBoardCfgStore((state) => state.setColSize(colSize))
-  }
-
- 
+  const setColSize = useBoardCfgStore((state) => state.setColSize);
 
   return (
     <React.Fragment>
@@ -60,60 +66,36 @@ function SetupMenu() {
         sx={{ justifyContent: "center", alignItems: "center", paddingTop: 5 }}
         maxWidth="xs"
       >
-        <Paper variant="outlined" sx={{padding: 5}}>
-            <Grid container spacing={2}>
-              <Grid xs={12} display="flex" justifyContent="center" alignItems="center">
-                <Stack
-                  direction="row"
-                  justifyContent="center"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  {rowOptions}
-                  {/* <Box>
-                    <InputLabel id="Row size">Row size</InputLabel>
-                    <Select
-                      value={rowSize.toString(10)}
-                      label="Row size"
-                      id="Row size"
-                      onChange={(event: SelectChangeEvent) =>
-                        setRowSize(parseInt(event.target.value))
-                      }
-                    >
-                      {possibleSizes.map((value, _) => (
-                        <MenuItem key={"rowSize-" + value} value={value}>
-                          {value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </Box> */}
-
-                  <Box>
-                    <InputLabel id="Column size">Col size</InputLabel>
-                    <Select
-                      value={colSize.toString(10)}
-                      label="Column size"
-                      id="Column size"
-                      onChange={(event: SelectChangeEvent) =>
-                        setColSize(parseInt(event.target.value))
-                      }
-                    >
-                      {possibleSizes.map((value, _) => (
-                        <MenuItem key={"colSize-" + value} value={value}>
-                          {value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </Box>
-                  
-                </Stack>
-              </Grid>
-              <Grid xs={12} display="flex" justifyContent="center" alignItems="center" sx={{marginTop: 5}}>
-              <Button href="/game" variant="contained">
-                    Play!
-                  </Button>
-              </Grid>
+        <Paper variant="outlined" sx={{ padding: 5 }}>
+          <Grid container spacing={2}>
+            <Grid
+              xs={12}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={2}
+              >
+                {rowOptions}
+                {colOptions}
+              </Stack>
             </Grid>
+            <Grid
+              xs={12}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              sx={{ marginTop: 5 }}
+            >
+              <Button href="/game" variant="contained">
+                Play!
+              </Button>
+            </Grid>
+          </Grid>
         </Paper>
       </Container>
     </React.Fragment>
