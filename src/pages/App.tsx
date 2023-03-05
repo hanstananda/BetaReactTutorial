@@ -13,10 +13,10 @@ function App() {
   return (
     <React.Fragment>
       <ToolBar />
-      <Container sx={{ justifyContent: "center", alignItems: "center" }}>
+      <Container >
         <Paper
           variant="outlined"
-          sx={{ textAlign: "center", p: 5, m: 2, width: boxSizePx * (colSize + 1) }}
+          sx={{ textAlign: "center", p: 5, m: 2, minWidth: boxSizePx * (colSize + 1) }}
         >
             <Game />
         </Paper>
