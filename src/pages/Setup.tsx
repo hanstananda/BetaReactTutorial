@@ -10,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { Box, Button, FormControl, Stack } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { useBoardCfgStore } from "../stores/BoardCfgContext";
+import { useBoardCfgStore } from "../stores/BoardConfig";
 
 const possibleSizes = Array(maxSquares - minSquares + 1)
   .fill(0)

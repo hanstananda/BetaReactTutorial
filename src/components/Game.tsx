@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useBoardCfgStore } from "../stores/BoardCfgContext";
+import { useBoardCfgStore } from "../stores/BoardConfig";
 import Board from "./Board";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -15,7 +15,7 @@ export interface OnPlay {
 
 export default function Game() {
   const rowSize = useBoardCfgStore((state) => state.rowSize)
-  const colSize = useBoardCfgStore((state) => state.rowSize)
+  const colSize = useBoardCfgStore((state) => state.colSize)
 
   const [turn, setTurn] = useState<number>(0);
   const currentPlayer = turn % 2 == 0 ? "X" : "O";

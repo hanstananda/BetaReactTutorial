@@ -5,18 +5,18 @@ import Paper from "@mui/material/Paper";
 import { boxSizePx } from "../types/Boardconst";
 import Game from "../components/Game";
 import { ToolBar } from "../components/ToolBar";
+import { useBoardCfgStore } from "../stores/BoardConfig";
 
-export const row = 3;
-export const col = 3;
 
 function App() {
+  const colSize = useBoardCfgStore((state) => state.colSize)
   return (
     <React.Fragment>
       <ToolBar />
       <Container sx={{ justifyContent: "center", alignItems: "center" }}>
         <Paper
           variant="outlined"
-          sx={{ textAlign: "center", p: 5, m: 2, width: boxSizePx * (col + 1) }}
+          sx={{ textAlign: "center", p: 5, m: 2, width: boxSizePx * (colSize + 1) }}
         >
             <Game />
         </Paper>

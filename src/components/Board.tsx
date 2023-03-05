@@ -8,7 +8,7 @@ import calculateWinner from "../hooks/calculateWinner";
 import classes from "./Board.module.scss";
 import { OnPlay } from "./Game";
 import { BoardInfo } from "../types/BoardInfo";
-import { useBoardCfgStore } from "../stores/BoardCfgContext";
+import { useBoardCfgStore } from "../stores/BoardConfig";
 
 // TODO: type Function properly by making interface, e.g.
 /*
@@ -24,7 +24,7 @@ function Board({
   handlePlay: OnPlay;
 }) {
   const rowSize = useBoardCfgStore((state) => state.rowSize)
-  const colSize = useBoardCfgStore((state) => state.rowSize)
+  const colSize = useBoardCfgStore((state) => state.colSize)
   
 
   return (
