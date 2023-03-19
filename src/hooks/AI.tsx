@@ -1,4 +1,6 @@
 import { BoardInfo } from "../types/BoardInfo";
+import { CellScore, direction } from "../types/AI";
+import { posChecksX, posChecksY } from "../types/Boardconst";
 
 export default function easyAI(
   boardInfo: BoardInfo,
@@ -27,28 +29,6 @@ export default function easyAI(
 
   return [-1,-1]
 }
-
-// Left -> Right, Up -> Down, Diagonal Down Right, Diagonal Down Left
-const direction = {
-  LR: 0,
-  UD: 1,
-  DR: 2,
-  DL: 3,
-};
-
-// right, down, right-down, left-down
-const posChecksY = [0, 1, 1, 1];
-const posChecksX = [1, 0, 1, -1];
-
-export interface CellScore {
-  xStart: number;
-  yStart: number;
-  direction: number;
-  countE: number;
-  countX: number; 
-  countO: number;
-}
-
 
 export function normalAI(
   boardInfo: BoardInfo,
@@ -169,7 +149,7 @@ export function normalAI(
     });
   }
 
-  function compareCellScores(a : CellScore,b : CellScore) {
+  function compareCellScores(a : CellScore,b : CellScore): number {
     // O's turn
     if (currentTurn == 'O'){
       // almost win, just win la 
