@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import calculateWinner from "../hooks/calculateWinner";
 import { BoardInfo } from "../types/BoardInfo";
 import { getStatusText } from "../utils/getStatusText";
-import bitBetterAI from "../hooks/AI";
+import easyAI, { normalAI } from "../hooks/AI";
 
 export interface OnPlay {
   (board: BoardInfo, selectedRow: number, selectedCol: number): void;
@@ -88,9 +88,14 @@ export default function Game() {
   if (compTurn[0]===getSymbolFromTurn(turn)) {
     console.log("Compturn is ",compTurn)
     console.log("AI turn now since it's now ",currentPlayer)
-    const [row,col] = bitBetterAI(currentBoardInfo, compTurn[0])
+    const [row,col] = normalAI(currentBoardInfo, compTurn[0])
     console.log("AI result: ",row,col)
-    handlePlay(currentBoardInfo, row, col)
+    if (row==-1 || col==-1) {
+      // AI can't move
+      handlePlay(currentBoardInfo, 1,1)
+    } else {
+      handlePlay(currentBoardInfo, row, col)
+    }
   }
 
   console.log("Now on turn %d with board state %o", turn, currentBoardInfo);
