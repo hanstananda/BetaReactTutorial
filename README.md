@@ -3,7 +3,7 @@ This project uses React with Typescript + Vite.
 
 This project is developed based on the Tic-Tac-Toe tutorial on [Beta ReactJS docs](https://react.dev/learn/tutorial-tic-tac-toe) with major modifications. 
 
-Notable modifications include configuration menu to select board size, `PVP` and `PVE` mode, and its corresponding `PVE` options. 
+Notable modifications include addition of configuration menu to select board size, `PVP` and `PVE` mode, and its corresponding `PVE` options. 
 
 ## Getting Started
 
