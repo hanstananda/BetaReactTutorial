@@ -1,5 +1,6 @@
 # Beta React Tutorial Project
 This project uses React with Typescript + Vite.
+This project also uses [pnpm](https://pnpm.io/) as the package manager. 
 
 This project is developed based on the Tic-Tac-Toe tutorial on [Beta ReactJS docs](https://react.dev/learn/tutorial-tic-tac-toe) with major modifications. 
 
@@ -9,7 +10,7 @@ Notable modifications include addition of configuration menu to select board siz
 
 In the project directory, you can run:
 
-### `npm run dev`
+### `pnpm run dev`
 
 Runs the app in the development mode.\
 Open [http://localhost:3030](http://localhost:3030) to view it in your browser.
@@ -17,7 +18,7 @@ Open [http://localhost:3030](http://localhost:3030) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-### `npm run build`
+### `pnpm run build`
 
 Builds the app for production to the `dist` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -27,7 +28,7 @@ Your app is ready to be deployed!
 
 See the section about [production build](https://vitejs.dev/guide/build.html) and [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run preview`
+### `pnpm run preview`
 
 Runs a preview of the production build from the `dist` folder. 
 Note that you will have to run `npm run build` before running this. 
