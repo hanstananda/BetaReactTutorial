@@ -181,17 +181,17 @@ export function normalAI(
 
       // break streak 
       if (a.countX >=2 && a.countO ==0) {
-        console.log("streak need to be broken found!")
+        // console.log("streak need to be broken found!")
         return 50
       } else if (b.countX >=2 && b.countO ==0) {
-        console.log("streak need to be broken found!")
+        // console.log("streak need to be broken found!")
         return -50
       }
       return (a.countX - b.countX ) * 3 + (a.countO - b.countO) * 2
     } 
     else {
       // X's turn
-      
+
       // almost win, just win la 
       if (a.countX ==winLength-1 && a.countE >= 1) {
         return 100;
@@ -212,7 +212,7 @@ export function normalAI(
 
   scoreTable.sort(compareCellScores)
   scoreTable.reverse()
-  console.log("scoretable is",scoreTable)
+  // console.log("scoretable is",scoreTable)
 
   // try to play based on the best avaiable
   for(let z=0;z< scoreTable.length; z++) {

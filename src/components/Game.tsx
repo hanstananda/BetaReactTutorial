@@ -23,10 +23,11 @@ export default function Game() {
   const colSize = useBoardCfgStore((state) => state.colSize)
   const compTurn = useBoardCfgStore((state) => state.compTurn)
   const gameMode = useBoardCfgStore((state) => state.mode)
+  const AILevel = useBoardCfgStore((state) => state.AILevel)
 
   const [turn, setTurn] = useState<number>(0);
   const currentPlayer = getSymbolFromTurn(turn);
-  console.log(currentPlayer)
+  //console.log(currentPlayer)
 
 
   const [history, setHistory] = useState<BoardInfo[]>([
@@ -65,7 +66,7 @@ export default function Game() {
     // Create deep copy of board object
     const updatedBoardInfo = structuredClone(boardInfo);
 
-    console.log("editing row " + selectedRow + " col " + selectedCol);
+    //console.log("editing row " + selectedRow + " col " + selectedCol);
 
     // May want to try use reducers...
 
@@ -99,7 +100,7 @@ export default function Game() {
     }
     
   }
-  console.log("Gamemode is",gameMode)
+  //console.log("Gamemode is",gameMode)
 
   // check if current one is AI's turn
   if (compTurn[0]===getSymbolFromTurn(turn) && gameMode=='PVE') {
@@ -123,11 +124,12 @@ export default function Game() {
       }
     }
 
-    await sleep(200);
-    console.log("Compturn is ",compTurn)
-    console.log("AI turn now since it's now ",currentPlayer)
-    const [row,col] = normalAI(currentBoardInfo, compTurn[0])
-    console.log("AI result: ",row,col)
+    // Give fake feeling of AI thinking XD
+    await sleep(150);
+    //console.log("Compturn is ",compTurn)
+    //console.log("AI turn now since it's now ",currentPlayer)
+    const [row, col] = AILevel== "easy"? easyAI(currentBoardInfo, compTurn[0]): normalAI(currentBoardInfo, compTurn[0])
+    //console.log("AI result: ",row,col)
     for (let y = 0; y < rowSize; y++) {
       for (let x = 0; x < colSize; x++) {
         currentBoardInfo.squares[y][x].disabled = false;
@@ -143,8 +145,8 @@ export default function Game() {
   }
 
 
-  console.log("Now on turn %d with board state %o", turn, currentBoardInfo);
-  console.log("History is %o", history);
+  //console.log("Now on turn %d with board state %o", turn, currentBoardInfo);
+  //console.log("History is %o", history);
 
   const status = getStatusText(currentBoardInfo, currentPlayer);
 

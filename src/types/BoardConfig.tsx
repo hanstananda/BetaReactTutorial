@@ -6,5 +6,7 @@ export interface BoardCfgState {
   mode: string
   setMode: (inputMode: string) => void
   compTurn: [string]
-  setCompTurn: (inputMode: string) => void
+  setCompTurn: (inputTurn: string) => void
+  AILevel: string
+  setAILevel: (inputLevel: string) => void
 }
