@@ -77,15 +77,15 @@ export function normalAI(
         default:
           countE++;
       }
-      scoreTable.push({
-        xStart: 0,
-        yStart: y,
-        direction: direction['LR'],
-        countE: countE,
-        countX: countX, 
-        countO: countO,
-      });
     }
+    scoreTable.push({
+      xStart: 0,
+      yStart: y,
+      direction: direction['LR'],
+      countE: countE,
+      countX: countX, 
+      countO: countO,
+    });
   }
 
   // check vertical 
@@ -104,15 +104,15 @@ export function normalAI(
         default:
           countE++;
       }
-      scoreTable.push({
-        xStart: x,
-        yStart: 0,
-        direction: direction['UD'],
-        countE: countE,
-        countX: countX, 
-        countO: countO,
-      });
     }
+    scoreTable.push({
+      xStart: x,
+      yStart: 0,
+      direction: direction['UD'],
+      countE: countE,
+      countX: countX, 
+      countO: countO,
+    });
   }
 
   // check diagonal Down Right
@@ -131,15 +131,15 @@ export function normalAI(
         default:
           countE++;
       }
-      scoreTable.push({
-        xStart: x,
-        yStart: 0,
-        direction: direction['UD'],
-        countE: countE,
-        countX: countX, 
-        countO: countO,
-      });
     }
+    scoreTable.push({
+      xStart: x,
+      yStart: 0,
+      direction: direction['DR'],
+      countE: countE,
+      countX: countX, 
+      countO: countO,
+    });
   }
 
   // check diagonal Down Left
@@ -158,56 +158,45 @@ export function normalAI(
         default:
           countE++;
       }
-      scoreTable.push({
-        xStart: x,
-        yStart: 0,
-        direction: direction['UD'],
-        countE: countE,
-        countX: countX, 
-        countO: countO,
-      });
     }
+    scoreTable.push({
+      xStart: x,
+      yStart: 0,
+      direction: direction['DL'],
+      countE: countE,
+      countX: countX, 
+      countO: countO,
+    });
   }
 
   function compareCellScores(a : CellScore,b : CellScore) {
-    if (a.countE + a.countX + a.countO ==winLength) {
-      // cannot be used to play, just return the other first 
-      if (b.countE + b.countX + b.countO == winLength) {
-        // both full, tie
-        return 0
-      }
-      // return one with cells
-      return -100;
-    } else if (b.countE + b.countX + b.countO == winLength) {
-      // b full, return a
-      return 100
-    }
-
     // O's turn
-    {
-      // no block
-      if (a.countX == 0 && b.countX ==0) {
-        // play whichever more beneficial
-        if (a.countO == b.countO) {
-          // same number, play in place more empty 
-          return b.countE - a.countE
-        }
-        else {
-          // play whichever has more O since no opponent (X)
-          return a.countO - b.countO
-        }
-      } else if (a.countX ==0 ) {
-        return 50;
-      } else if (b.countX == 0) {
-        return -50;
+    if (currentTurn == 'O'){
+      // break streak 
+      if (a.countX >=2 && a.countO ==0) {
+        console.log("streak need to be broken found!")
+        return 50
+      } else if (b.countX >=2 && b.countO ==0) {
+        console.log("streak need to be broken found!")
+        return -50
       }
       return (a.countX - b.countX ) * 3 + (a.countO - b.countO) * 2
     } 
+    else {
+      // break streak 
+      if (a.countO >=2 && a.countX ==0) {
+        return 50
+      } else if (b.countO >=2 && a.countX==0) {
+        return -50
+      }
+      return (a.countO - b.countO ) * 3 + (a.countX - b.countX) * 2
+    }
 
   }
 
   scoreTable.sort(compareCellScores)
   scoreTable.reverse()
+  console.log("scoretable is",scoreTable)
 
   // try to play based on the best avaiable
   for(let z=0;z< scoreTable.length; z++) {
@@ -216,10 +205,6 @@ export function normalAI(
     let x=currentBestMove.xStart
     let dir = currentBestMove.direction
     for(let i=0;i<winLength;i++) {
-      if (x < 0 || y < 0 || y >= rowSize || x >= colSize) {
-        console.log("Warning! invalid check at ",x,y,currentBestMove)
-        break;
-      }
       if(board[y][x].value=='') {
         // found empty place, just move here
         return [y,x]
