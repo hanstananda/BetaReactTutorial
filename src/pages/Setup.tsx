@@ -16,6 +16,9 @@ const possibleSizes = Array(maxSquares - minSquares + 1)
   .fill(0)
   .map((_, i) => i + minSquares);
 
+const possibleSymbols = ["X", "O"]
+const possibleModes = ["PVP", "PVE"]
+
 function sizeOptions(type: string, size: number) {
   const setter = (() => {
     switch (type.toLowerCase()) {
@@ -50,6 +53,41 @@ function sizeOptions(type: string, size: number) {
   return result;
 }
 
+function compOptions(gameMode: string, compTurn: string) {
+  console.log("Given gamemode is",gameMode)
+  const setCompTurn = useBoardCfgStore((state) => state.setCompTurn);
+  if (gameMode == 'PVE') {
+    return (
+      <Grid
+              xs={12}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              sx={{ marginTop: 5 }}
+            >
+    <Box>
+      <InputLabel id="compTurn-label">AI's Turn</InputLabel>
+      <Select
+        value={compTurn}
+        label="Computer Turn"
+        id="compTurn-select"
+        onChange={(event: SelectChangeEvent) =>
+          setCompTurn(event.target.value)
+        }
+      >
+        {possibleSymbols.map((value, _) => (
+          <MenuItem key={value} value={value}>
+            {value}
+          </MenuItem>
+        ))}
+      </Select>
+    </Box>
+    </Grid>
+    )
+  }
+  return (<React.Fragment></React.Fragment>)
+}
+
 function SetupMenu() {
   const rowSize = useBoardCfgStore((state) => state.rowSize);
   const colSize = useBoardCfgStore((state) => state.colSize);
@@ -57,7 +95,12 @@ function SetupMenu() {
   const rowOptions = sizeOptions("Row", rowSize);
   const colOptions = sizeOptions("Col", colSize);
 
-  const setColSize = useBoardCfgStore((state) => state.setColSize);
+  const gameMode = useBoardCfgStore((state) => state.mode);
+  const setGameMode = useBoardCfgStore((state) => state.setMode);
+
+  const compTurn = useBoardCfgStore((state) => state.compTurn);
+  const compTurnOptions = compOptions(gameMode, compTurn[0]);
+  
 
   return (
     <React.Fragment>
@@ -84,6 +127,32 @@ function SetupMenu() {
                 {colOptions}
               </Stack>
             </Grid>
+            <Grid
+              xs={12}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              sx={{ marginTop: 5 }}
+            >
+              <Box>
+                <InputLabel id="gameMode-label">Game mode</InputLabel>
+                <Select
+                  value={gameMode}
+                  label="gameMode"
+                  id="gameMode-select"
+                  onChange={(event: SelectChangeEvent) =>
+                    setGameMode(event.target.value)
+                  }
+                >
+                  {possibleModes.map((value, _) => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+            </Grid>
+            {compTurnOptions}
             <Grid
               xs={12}
               display="flex"

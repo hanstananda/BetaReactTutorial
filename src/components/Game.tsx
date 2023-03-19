@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useBoardCfgStore } from "../stores/BoardConfig";
 import Board from "./Board";
 import Box from "@mui/material/Box";
@@ -22,6 +22,7 @@ export default function Game() {
   const rowSize = useBoardCfgStore((state) => state.rowSize)
   const colSize = useBoardCfgStore((state) => state.colSize)
   const compTurn = useBoardCfgStore((state) => state.compTurn)
+  const gameMode = useBoardCfgStore((state) => state.mode)
 
   const [turn, setTurn] = useState<number>(0);
   const currentPlayer = getSymbolFromTurn(turn);
@@ -39,6 +40,7 @@ export default function Game() {
             (_) => ({
               value: "",
               isWinSquare: false,
+              disabled: false,
             })
           )
       ),
@@ -47,7 +49,6 @@ export default function Game() {
     },
   ]);
   const currentBoardInfo = history[turn];
-
   function handlePlay(
     boardInfo: BoardInfo,
     selectedRow: number,
@@ -81,22 +82,66 @@ export default function Game() {
   }
 
   function undo() {
-    setTurn(turn - 1);
+    if(gameMode == 'PVE') {
+      if (currentBoardInfo.gameFinished) {
+        if(currentPlayer==compTurn[0]) {
+          setTurn(turn -1);
+        } else {
+          setTurn(turn -2);
+        }
+        
+      }
+      else {
+        setTurn(turn - 2);
+      }
+    } else {
+      setTurn(turn - 1);
+    }
+    
   }
+  console.log("Gamemode is",gameMode)
 
   // check if current one is AI's turn
-  if (compTurn[0]===getSymbolFromTurn(turn)) {
+  if (compTurn[0]===getSymbolFromTurn(turn) && gameMode=='PVE') {
+    runAI()
+  }
+
+  function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+  async function runAI() {
+    if (currentBoardInfo.gameFinished) {
+      // Game finished, just return
+      return;
+    }
+    const rowSize = currentBoardInfo.squares.length;
+    const colSize = currentBoardInfo.squares[0].length;
+    for (let y = 0; y < rowSize; y++) {
+      for (let x = 0; x < colSize; x++) {
+        currentBoardInfo.squares[y][x].disabled = true;
+      }
+    }
+
+    await sleep(200);
     console.log("Compturn is ",compTurn)
     console.log("AI turn now since it's now ",currentPlayer)
     const [row,col] = normalAI(currentBoardInfo, compTurn[0])
     console.log("AI result: ",row,col)
+    for (let y = 0; y < rowSize; y++) {
+      for (let x = 0; x < colSize; x++) {
+        currentBoardInfo.squares[y][x].disabled = false;
+      }
+    }
     if (row==-1 || col==-1) {
       // AI can't move
       handlePlay(currentBoardInfo, 1,1)
     } else {
       handlePlay(currentBoardInfo, row, col)
     }
+
   }
+
 
   console.log("Now on turn %d with board state %o", turn, currentBoardInfo);
   console.log("History is %o", history);

@@ -20,6 +20,7 @@ function Square({
         color: squareData.isWinSquare ? "blue" : "black",
       }}
       onClick={onSquareClick}
+      disabled={squareData.disabled}
       className="square"
     >
       {squareData.value}

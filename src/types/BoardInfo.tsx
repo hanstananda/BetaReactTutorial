@@ -7,4 +7,5 @@ export interface BoardInfo {
 export interface SquareData {
   value: string;
   isWinSquare: boolean;
+  disabled: boolean;
 }

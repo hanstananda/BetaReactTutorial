@@ -172,6 +172,13 @@ export function normalAI(
   function compareCellScores(a : CellScore,b : CellScore) {
     // O's turn
     if (currentTurn == 'O'){
+      // almost win, just win la 
+      if (a.countO ==winLength-1 && a.countE >= 1) {
+        return 100;
+      } else if (b.countO == winLength -1 && b.countE >= 1) {
+        return -100;
+      }
+
       // break streak 
       if (a.countX >=2 && a.countO ==0) {
         console.log("streak need to be broken found!")
@@ -183,6 +190,15 @@ export function normalAI(
       return (a.countX - b.countX ) * 3 + (a.countO - b.countO) * 2
     } 
     else {
+      // X's turn
+      
+      // almost win, just win la 
+      if (a.countX ==winLength-1 && a.countE >= 1) {
+        return 100;
+      } else if (b.countX == winLength -1 && b.countE >= 1) {
+        return -100;
+      }
+
       // break streak 
       if (a.countO >=2 && a.countX ==0) {
         return 50
