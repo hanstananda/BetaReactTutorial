@@ -8,18 +8,25 @@ import Button from "@mui/material/Button";
 import calculateWinner from "../hooks/calculateWinner";
 import { BoardInfo } from "../types/BoardInfo";
 import { getStatusText } from "../utils/getStatusText";
+import bitBetterAI from "../hooks/AI";
 
 export interface OnPlay {
   (board: BoardInfo, selectedRow: number, selectedCol: number): void;
 }
 
+function getSymbolFromTurn(turn: number): string  {
+  return turn % 2 == 0 ? "X" : "O"
+}
+
 export default function Game() {
   const rowSize = useBoardCfgStore((state) => state.rowSize)
   const colSize = useBoardCfgStore((state) => state.colSize)
+  const compTurn = useBoardCfgStore((state) => state.compTurn)
 
   const [turn, setTurn] = useState<number>(0);
-  const currentPlayer = turn % 2 == 0 ? "X" : "O";
+  const currentPlayer = getSymbolFromTurn(turn);
   console.log(currentPlayer)
+
 
   const [history, setHistory] = useState<BoardInfo[]>([
     {
@@ -63,7 +70,11 @@ export default function Game() {
 
     updatedBoardInfo.squares[selectedRow][selectedCol].value = currentPlayer;
 
-    const calculatedBoardInfo = calculateWinner(updatedBoardInfo);
+    updateBoard(updatedBoardInfo);    
+  }
+
+  function updateBoard(boardInfo: BoardInfo) {
+    const calculatedBoardInfo = calculateWinner(boardInfo);
     const nextHistory = [...history.slice(0, turn + 1), calculatedBoardInfo];
     setHistory(nextHistory);
     setTurn(nextHistory.length - 1);
@@ -71,6 +82,15 @@ export default function Game() {
 
   function undo() {
     setTurn(turn - 1);
+  }
+
+  // check if current one is AI's turn
+  if (compTurn[0]===getSymbolFromTurn(turn)) {
+    console.log("Compturn is ",compTurn)
+    console.log("AI turn now since it's now ",currentPlayer)
+    const [row,col] = bitBetterAI(currentBoardInfo, compTurn[0])
+    console.log("AI result: ",row,col)
+    handlePlay(currentBoardInfo, row, col)
   }
 
   console.log("Now on turn %d with board state %o", turn, currentBoardInfo);

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BoardCfgState } from "../types/BoardCfg";
+import { BoardCfgState } from "../types/BoardConfig";
 import { createJSONStorage, persist, devtools } from "zustand/middleware";
 
 export const useBoardCfgStore = create<BoardCfgState>()(
@@ -8,6 +8,8 @@ export const useBoardCfgStore = create<BoardCfgState>()(
       (set, get) => ({
         rowSize: 3,
         colSize: 3,
+        mode: "PVE",
+        compTurn: ["O"],
         setRowSize: function (inputRowSize: number): void {
           console.log("New row size is ", inputRowSize);
           set((_) => ({ rowSize: inputRowSize }));

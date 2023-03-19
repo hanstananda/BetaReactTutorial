@@ -3,4 +3,6 @@ export interface BoardCfgState {
   colSize: number
   setRowSize: (rowSize: number) => void
   setColSize: (colSize: number) => void
+  mode: string
+  compTurn: [string]
 }
