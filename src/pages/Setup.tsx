@@ -91,7 +91,7 @@ function compOptions(gameMode: string) {
         label="Computer Turn"
         id="compTurn-select"
         onChange={(event: SelectChangeEvent) =>
-          setAILevel(event.target.value)
+          setCompTurn(event.target.value)
         }
       >
         {possibleSymbols.map((value, _) => (
