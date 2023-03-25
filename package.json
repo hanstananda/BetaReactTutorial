@@ -9,7 +9,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build-subdir": "tsc && vite build --config vite.config.subdir.ts",
-    "build-gh": "tsc && vite build --config vite.config.gh-page.ts",
+    "build-gh-page": "tsc && vite build --config vite.config.gh-page.ts",
     "preview": "vite preview"
   },
   "dependencies": {
