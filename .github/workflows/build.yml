@@ -1,4 +1,5 @@
 # CI workflow to always build 
+name: CI build
 on:
   - push
   - pull_request
