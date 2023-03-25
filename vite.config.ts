@@ -10,4 +10,5 @@ export default defineConfig({
   preview: {
     port: 8080,
   },
+  base: '/tic_tac_toe',
 });

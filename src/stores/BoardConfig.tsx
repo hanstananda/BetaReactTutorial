@@ -43,7 +43,7 @@ export const useBoardCfgStore = create<BoardCfgState>()(
         },
         AILevel: "easy", 
         setAILevel: function (inputLevel: string) : void {
-          console.log("Selected AI level is",inputLevel)
+          // console.log("Selected AI level is",inputLevel)
           switch (inputLevel.toLowerCase()) {
             case 'easy':
               set((_) => ({ AILevel: "easy" }));
