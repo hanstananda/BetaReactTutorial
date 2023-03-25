@@ -3,14 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://github.com/hanstananda/hanstananda.github.io/tic_tac_toe",
+  "homepage": "https://github.com/hanstananda/hanstananda.github.io/BetaReactTutorial",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "vite",
     "build": "tsc && vite build",
-    "build-gh": "tsc && vite build --config vite.config.gh.ts",
-    "preview": "vite preview",
-    "deploy": "gh-pages -r git@github.com:hanstananda/hanstananda.github.io.git -b develop -d dist"
+    "build-subdir": "tsc && vite build --config vite.config.subdir.ts",
+    "build-gh": "tsc && vite build --config vite.config.gh-page.ts",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
