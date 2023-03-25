@@ -36,3 +36,10 @@ Open [http://localhost:8080](http://localhost:8080) to view it in your browser.
 
 For more detailed information about the preview options, please read the documentation about [Vite preview options](https://vitejs.dev/config/preview-options.html#preview-options).
 
+
+
+### deployment notes
+Currently, there are 3 avenues of deployment. 
+1. [Vercel](https://vercel.com/) --> A platform for frontend developers, which enable teams to iterate quickly and develop, preview, and ship with zero configuration. 
+2. [Github pages](https://pages.github.com/). This is done using integration on the Github actions as recommended on the [official documentation from Vite](https://vitejs.dev/guide/static-deploy.html#github-pages). This uses `build-gh-page` npm script to build the project on the proper base URL (`{BASE_DOMAIN}/BetaReactTutorial`), which will use the custom `vite.config.gh-page.ts`. 
+3. Manual deployment. This uses  `build-subdir` npm script to build the project on base URL of  (`{BASE_DOMAIN}/tic_tac_toe`) for prettier custom sub-URL. 
