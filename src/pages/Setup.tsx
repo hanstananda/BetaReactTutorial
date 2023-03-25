@@ -2,6 +2,7 @@ import React from "react";
 import { useContext, useState } from "react";
 import Container from "@mui/material/Container";
 
+import { Link } from "react-router-dom"
 import Paper from "@mui/material/Paper";
 import { maxSquares, minSquares } from "../types/Boardconst";
 import { ToolBar } from "../components/ToolBar";
@@ -197,8 +198,8 @@ function SetupMenu() {
               alignItems="center"
               sx={{ marginTop: 5 }}
             >
-              <Button href="/game" variant="contained">
-                Play!
+              <Button variant="contained" component={Link} to="/game">
+                  Play!
               </Button>
             </Grid>
           </Grid>
