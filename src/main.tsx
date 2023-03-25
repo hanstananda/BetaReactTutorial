@@ -13,7 +13,11 @@ const router = createBrowserRouter([
     path: "/game",
     element: <App />,
   },
-]);
+], {
+  basename: import.meta.env.BASE_URL
+});
+
+console.log("Basepath is ",import.meta.env.BASE_URL)
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
